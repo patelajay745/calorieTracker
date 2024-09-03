@@ -3,9 +3,9 @@ package main
 import (
 	"os"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/patelajay745/calories-tracker/routes"
+	"github.com/patelajay745/calories-tracker/controllers"
 )
 
 func main() {
@@ -18,15 +18,15 @@ func main() {
 	router.Use(gin.Logger())
 	router.Use(cors.Default())
 
-	router.POST("/entry/create", routes.AddEntry)
-	router.GET("/entries", routes.GetEntries)
-	router.GET("/entry/:id/", routes.EntryByID)
-	router.GET("/ingredient/:ingredient", routes.GetEntriesByIngredient)
+	router.POST("/entry/create", controllers.AddEntry)
+	router.GET("/entries", controllers.GetEntries)
+	router.GET("/entry/:id/", controllers.GetEntryByID)
+	router.GET("/ingredient/:ingredient", controllers.GetEntriesByIngredient)
 
-	router.PUT("/entry/update/:id", routes.UpdateEntry)
-	router.PUT("/ingredient/update/:id", routes.UpdateIngredient)
+	router.PUT("/entry/update/:id", controllers.UpdateEntry)
+	router.PUT("/ingredient/update/:id", controllers.UpdateIngredient)
 
-	router.DELETE("/entry/delete/:id", routes.DeleteEntry)
+	router.DELETE("/entry/delete/:id", controllers.DeleteEntry)
 
 	router.Run(":" + port)
 
