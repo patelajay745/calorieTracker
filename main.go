@@ -18,15 +18,15 @@ func main() {
 	router.Use(gin.Logger())
 	router.Use(cors.Default())
 
-	router.POST("/entry/create", controllers.AddEntry)
-	router.GET("/entries", controllers.GetEntries)
-	router.GET("/entry/:id/", controllers.GetEntryByID)
+	router.POST("/entry", controllers.AddEntry)         //tested:okay
+	router.GET("/entry", controllers.GetEntries)        //tested:okay
+	router.GET("/entry/:id/", controllers.GetEntryByID) //tested:okay
 	router.GET("/ingredient/:ingredient", controllers.GetEntriesByIngredient)
 
-	router.PUT("/entry/update/:id", controllers.UpdateEntry)
-	router.PUT("/ingredient/update/:id", controllers.UpdateIngredient)
+	router.PUT("/entry/:id", controllers.UpdateEntry) 
+	router.PUT("/ingredient/:id", controllers.UpdateIngredient)
 
-	router.DELETE("/entry/delete/:id", controllers.DeleteEntry)
+	router.DELETE("/entry/:id", controllers.DeleteEntry) //tested:okay
 
 	router.Run(":" + port)
 

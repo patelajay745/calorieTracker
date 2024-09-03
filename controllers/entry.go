@@ -35,13 +35,13 @@ func AddEntry(c *gin.Context) {
 	}
 	entry.ID = primitive.NewObjectID()
 
-	resultID, err := entryCollection.InsertOne(ctx, entry)
+	_, err := entryCollection.InsertOne(ctx, entry)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusOK, resultID)
+	c.JSON(http.StatusCreated, entry)
 }
 
 func GetEntries(c *gin.Context) {
@@ -59,6 +59,12 @@ func GetEntries(c *gin.Context) {
 	}
 
 	defer cancel()
+
+	if entries == nil {
+		c.JSON(http.StatusOK, gin.H{"message": "No entries in database"})
+		return
+	}
+
 	c.JSON(http.StatusOK, entries)
 }
 
@@ -71,8 +77,6 @@ func GetEntryByID(c *gin.Context) {
 
 	var entry bson.M
 	cursor := entryCollection.FindOne(ctx, bson.M{"_id": docID})
-
-	fmt.Println(cursor)
 
 	defer cancel()
 	if err := cursor.Decode(&entry); err != nil {
@@ -143,7 +147,7 @@ func UpdateEntry(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, updated.ModifiedCount)
+	c.JSON(http.StatusOK, gin.H{"message": "updated successfully", "count": updated.ModifiedCount})
 
 }
 func UpdateIngredient(c *gin.Context) {
@@ -173,7 +177,7 @@ func UpdateIngredient(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, updated.ModifiedCount)
+	c.JSON(http.StatusOK, gin.H{"message": "updated successfully", "count": updated.ModifiedCount})
 
 }
 func DeleteEntry(c *gin.Context) {
@@ -189,6 +193,6 @@ func DeleteEntry(c *gin.Context) {
 	}
 	defer cancel()
 
-	c.JSON(http.StatusOK, result.DeletedCount)
+	c.JSON(http.StatusOK, gin.H{"message": "deleted successfully", "count": result.DeletedCount})
 
 }
